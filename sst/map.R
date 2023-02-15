@@ -12,11 +12,13 @@ pal2<-brewer.pal("Greens", n=9)
 longlat = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
 eck4 = "+proj=eck4 +datum=WGS84"
 moll<-"+proj=moll +x_0=0 +y_0=0 +lat_0=0 +lon_0=133"
+# moll<-"+proj=moll +lon_0=150 +ellps=WGS84"
 
 
 # data load and project Mollweide pacific centered
 load(file = 'sst/output/dhw_summary_2015-17.Rdata')
 crs(maxer) <- longlat
+# maxer<-projectRaster(maxer, crs= eck4)
 maxer<-projectRaster(maxer, crs= moll)
 
 crs(maxer_m) <- longlat
@@ -53,7 +55,7 @@ lay<-tm_layout(inner.margins=c(0,0,0,0), #legend.position = c("left", "top"),
 
 
 # plot
-ds=FALSE
+ds=TRUE
 pdf(file = 'sst/map_fig_dhw.pdf', height = 5, width = 20)
 tm_shape(maxer, raster.downsample=ds) + 
     tm_raster(palette=pal, style='cont', breaks = c(0, 4, 8, 12, 16, 18, 22), stretch.palette = TRUE,
@@ -86,11 +88,13 @@ tm_shape(maxer, raster.downsample=ds) +
 dev.off()
 
 
+## for reef DHW ID
+# tmap_mode("view")
+# qtm(maxer)
 
-
-
-
-
+## extract DHW by reef
+reef$DHW<-raster::extract(maxer, reef %>% select(geometry))
+reef$DHW_month<-raster::extract(maxer_m, reef %>% select(geometry))
 
 
 ## dumped overlays

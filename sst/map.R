@@ -1,9 +1,10 @@
 library(tmap)
-library(sp)
+library(tidyverse)
+library(raster)
+library(sf)
 library(RColorBrewer)
 
 ## format
-data(World)
 coldpal<-c('#d1e5f0')
 warmpal<-brewer.pal('OrRd', n = 9)
 pal<-c(coldpal, warmpal)
@@ -28,7 +29,7 @@ maxer_m<-projectRaster(maxer_m, crs= moll)
 reef<-readxl::read_excel('sst/aan8048_hughes_sm.xlsx') %>% janitor::clean_names() %>%
     mutate(bleach = ifelse(!is.na(x2016) | !is.na(x2015), 'bleach', NA)) %>% 
     filter(!is.na(bleach)) %>% 
-    select(location, lat, long, bleach) %>% 
+    dplyr::select(location, lat, long, bleach) %>% 
     mutate(latitude = str_replace_all(lat, 'º', ''),
            latitude = str_replace_all(latitude, 'S', ''),
            latitude = str_replace_all(latitude, 'N', ''),
@@ -93,8 +94,8 @@ dev.off()
 # qtm(maxer)
 
 ## extract DHW by reef
-reef$DHW<-raster::extract(maxer, reef %>% select(geometry))
-reef$DHW_month<-raster::extract(maxer_m, reef %>% select(geometry))
+reef$DHW<-raster::extract(maxer, reef %>% dplyr::select(geometry))
+reef$DHW_month<-raster::extract(maxer_m, reef %>% dplyr::select(geometry))
 
 
 ## dumped overlays

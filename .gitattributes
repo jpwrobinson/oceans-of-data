@@ -1,3 +1,4 @@
 #sst/dhw_5km_592f_e45e_274a.csv filter=lfs diff=lfs merge=lfs -text
 *.csv filter=lfs diff=lfs merge=lfs -text
 sst/csv/dhw_latlon_list.csv filter=lfs diff=lfs merge=lfs -text
+*shp filter=lfs diff=lfs merge=lfs -text

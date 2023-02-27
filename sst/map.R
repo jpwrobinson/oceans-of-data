@@ -3,6 +3,7 @@ library(tidyverse)
 library(raster)
 library(sf)
 library(RColorBrewer)
+library(cowplot)
 
 ## format
 coldpal<-c('#d1e5f0')
@@ -26,7 +27,7 @@ crs(maxer_m) <- longlat
 maxer_m<-projectRaster(maxer_m, crs= moll)
 
 # reefs - convert to lat long
-reef<-readxl::read_excel('sst/aan8048_hughes_sm.xlsx') %>% janitor::clean_names() %>%
+reef<-readxl::read_excel('sst//bleaching/aan8048_hughes_sm.xlsx') %>% janitor::clean_names() %>%
     mutate(bleach = ifelse(!is.na(x2016) | !is.na(x2015), 'bleach', NA)) %>% 
     filter(!is.na(bleach)) %>% 
     dplyr::select(location, lat, long, bleach) %>% 
@@ -42,6 +43,25 @@ reef<-readxl::read_excel('sst/aan8048_hughes_sm.xlsx') %>% janitor::clean_names(
     st_transform(reef, crs=moll)
 
 
+# bleaching reports
+bleach<-readxl::read_excel('sst/bleaching/Bleaching Database V2 - Urcelay and Donner.xlsx', sheet=1) %>% 
+    janitor::clean_names() %>% 
+    dplyr::select(country, location, site_name, date, month, year, lat_corrected, lon_corrected, percent_mortality, percent_bleached) %>% 
+    filter(year %in% c(2015, 2016, 2017))
+
+gbleach<-ggplot(bleach %>% filter(percent_bleached>0), aes(percent_bleached)) + geom_histogram(fill='grey95',col='grey95') +
+    scale_x_continuous(labels = scales::percent, expand=c(0,0)) +
+    scale_y_continuous(expand=c(0,0)) +
+    labs(x = 'Coral bleaching', y = 'Number of reefs') + theme_black()+
+    theme(panel.border = element_blank(),
+          axis.ticks = element_blank())
+
+gmort<-ggplot(bleach %>% filter(percent_mortality>0), aes(percent_mortality)) + geom_histogram(fill='grey95',col='grey95') +
+    scale_x_continuous(labels = scales::percent, expand=c(0,0)) +
+    scale_y_continuous(expand=c(0,0)) +
+    labs(x = 'Coral mortality', y = 'Number of reefs') + theme_black()+
+    theme(panel.border = element_blank(),
+          axis.ticks = element_blank())
 
 lay<-tm_layout(inner.margins=c(0,0,0,0), #legend.position = c("left", "top"), 
                legend.frame = FALSE,  
@@ -86,6 +106,10 @@ tm_shape(maxer, raster.downsample=ds) +
               colorNA = 'black', showNA = FALSE,  legend.is.portrait = FALSE) +
     tm_shape(reef) + tm_symbols(size=0.2, alpha=0.5) +
     lay+ tm_layout(legend.only = TRUE)
+dev.off()
+
+pdf(file = 'sst/hists.pdf', height = 4, width=8)
+plot_grid(gbleach, gmort, nrow=1)
 dev.off()
 
 

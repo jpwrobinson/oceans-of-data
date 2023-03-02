@@ -4,6 +4,7 @@ library(raster)
 library(sf)
 library(RColorBrewer)
 library(cowplot)
+source('theme_black.R')
 
 ## format
 coldpal<-c('#d1e5f0')

@@ -62,9 +62,3 @@ maxer_m<-which.max(smax)
 
 plot(maxer_m)
 save(maxer, maxer_m, file = 'sst/output/dhw_summary_2015-17.Rdata')
-
-tm_shape(maxer_m) + 
-    tm_raster() 
-
-tm_shape(maxer) + 
-    tm_raster() 

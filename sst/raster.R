@@ -9,7 +9,7 @@ library(tidyverse)
 
 
 years<-c(2015, 2016, 2017)
-    for(i in 1:length(years)){
+    for(i in 2:length(years)){
     
         ptm <- proc.time()
         files<-list.files(paste0('sst/dhw/', years[i]))

@@ -2,3 +2,4 @@
 *.csv filter=lfs diff=lfs merge=lfs -text
 sst/csv/dhw_latlon_list.csv filter=lfs diff=lfs merge=lfs -text
 *shp filter=lfs diff=lfs merge=lfs -text
+sst/map-workspace.RData filter=lfs diff=lfs merge=lfs -text

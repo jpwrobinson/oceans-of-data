@@ -136,3 +136,4 @@ plot_grid(g4, g5)
 dev.off()
 
 
+sum(eez_t$area[eez_t$terri == 'Colony']) / sum(eez_t$area[eez_t$terri != 'Colony']) * 100w

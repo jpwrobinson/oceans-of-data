@@ -192,9 +192,22 @@ sum(eez_t$area[eez_t$terri == 'Colony']) / sum(eez_t$area[eez_t$terri != 'Colony
 sum(eez_t$area[eez_t$terri == 'Colony'])
 
 
-eez_tc %>% filter(SOVEREIGN1 %in% c('United Kingdom', 'United States', 'Denmark', 'Spain', 'Portugal')) %>% 
+## empires without coloncies
+eez_tc %>% filter(SOVEREIGN1 %in% c('United Kingdom', 'United States','France', 'Denmark', 'Spain', 'Portugal')) %>% 
     summarise(sum(area_terri))
 
-eez_t %>% filter(SOVEREIGN1 %in% c('United Kingdom', 'United States', 'Denmark', 'Spain', 'Portugal')) %>% 
+eez_t %>% filter(SOVEREIGN1 %in% c('United Kingdom', 'United States','France','Norway', 'Denmark', 'Spain', 'Portugal')) %>% 
     ungroup() %>% 
+    filter(terri=='Colony') %>% 
     summarise(sum(area))
+
+eez_c %>% filter(SOVEREIGN1 %in% c('United Kingdom','Australia','New Zealand', 'United States','France','Norway', 'Denmark', 'Spain', 'Portugal')) 
+
+
+## 19th century empsires
+eez_t %>% filter(SOVEREIGN1 %in% c('United Kingdom', 'United States','France','Norway', 'Denmark', 'Spain', 'Portugal')) %>% 
+    ungroup() %>% 
+    filter(terri=='Colony') %>% 
+    summarise(sum(area))
+
+30060471 / sum(eez_c$area) * 100 ## 20%
